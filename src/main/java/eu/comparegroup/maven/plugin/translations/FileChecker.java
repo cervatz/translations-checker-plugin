@@ -23,9 +23,8 @@ public class FileChecker {
 	public FileTranslationsSummary processFile() {
 		FileTranslationsSummary fileTranslationsSummary = new FileTranslationsSummary(filePath);
 		String line = "";
-		try {
-			FileReader fileReader = new FileReader(filePath);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
+		try (FileReader fileReader = new FileReader(filePath);
+			BufferedReader bufferedReader = new BufferedReader(fileReader)) {
 
 			while ((line = bufferedReader.readLine()) != null) {
 				Matcher matcher = MESSAGES_PATTERN.matcher(line);
@@ -35,8 +34,6 @@ public class FileChecker {
 					processTranslation(keyName, translations, fileTranslationsSummary);
 				}
 			}
-			bufferedReader.close();
-			fileReader.close();
 		} catch (Exception ex) {
 			Logger.getLogger(TranslationsCheckerMojo.class.getName()).log(Level.SEVERE, null, ex);
 		}
